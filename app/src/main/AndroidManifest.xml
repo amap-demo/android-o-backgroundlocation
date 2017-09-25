@@ -50,7 +50,10 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="您申请的KEY" />
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="adjustResize|stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

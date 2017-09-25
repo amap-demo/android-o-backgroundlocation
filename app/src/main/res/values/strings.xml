@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AndroidO上后台定位</string>
+    <string name="app_name">AndroidO后台定位</string>
 
     <string name="title_location">获取定位数据</string>
     <string name="battery_saving">低功耗模式</string>
