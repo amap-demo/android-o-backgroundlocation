@@ -1,11 +1,9 @@
 package com.amap.androidobackgroundlocation;
 
-import android.app.ActivityManager;
-import android.content.Context;
+import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -24,17 +22,22 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.AMapLocationQualityReport;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Locale;
 
 /**
- * 高精度定位模式功能演示
- *
- * @创建时间： 2015年11月24日 下午5:22:42
- * @项目名称： AMapLocationDemo2.x
+ * 高德定位后台示例
+ * <p>
+ *     关于高德定位SDK的使用可以参考高德开放平台官网：https://lbs.amap.com/api/android-location-sdk/locationsummary/
+ * </p>
+ * <p>
+ *     示例中主要展示通过自己实现ForcegroundService的方式实现.
+ *     高德定位SDK从3.8.0开始已经开支支持直接将APSService变成前台service，
+ *     对应的接口名称分别是：
+ *     开启后台定位：{@link AMapLocationClient#enableBackgroundLocation(int, Notification)}
+ *     关闭后台定位能力：{@link AMapLocationClient#disableBackgroundLocation(boolean)}
+ *     在代码示例里已经有实现了，这个功能与使用自己实现ForcegroundService的方式使用其中一种就可以了，感兴趣的可以试试这个功能。
+ * </p>
  * @author hongming.wang
- * @文件名称: Hight_Accuracy_Activity.java
- * @类型名称: Hight_Accuracy_Activity
  */
 public class MainActivity extends CheckPermissionsActivity
 		implements
@@ -62,9 +65,12 @@ public class MainActivity extends CheckPermissionsActivity
 		setContentView(R.layout.activity_main);
 		setTitle(R.string.title_location);
 
-
+		/**
+		 * 如果使用{@link AMapLocationClient#enableBackgroundLocation(int, Notification)}的方式实现
+		 * 可以不用这个service
+		 */
 		serviceIntent = new Intent();
-		serviceIntent.setClass(this,LocationForegoundService.class);
+		serviceIntent.setClass(this, LocationForcegroundService.class);
 
 		initView();
 		
@@ -98,19 +104,33 @@ public class MainActivity extends CheckPermissionsActivity
 		super.onPause();
 		//如果已经开始定位了，显示通知栏
 		if(isSartLocation) {
+			//如果使用{@link AMapLocationClient#enableBackgroundLocation(int, Notification)}，这段代码可以不要
 			if (null != serviceIntent) {
 				startService(serviceIntent);
 			}
+
+			//开启APSService后台定位能力
+//			if(null != locationClient) {
+//				locationClient.enableBackgroundLocation(Utils.NOTIFY_ID, Utils.buildNotification(getApplicationContext()));
+//			}
 		}
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//如果要一直显示可以不执行
+		/**
+		 * 如果要一直显示可以不执行
+		 * 如果使用{@link AMapLocationClient#disableBackgroundLocation(boolean)} ，这段代码可以不要
+		 */
 		if(null != serviceIntent){
 			stopService(serviceIntent);
 		}
+
+		//关闭APSService后台定位能力
+//		if(null != locationClient) {
+//			locationClient.disableBackgroundLocation(true);
+//		}
 	}
 
 

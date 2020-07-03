@@ -1,11 +1,9 @@
 package com.amap.androidobackgroundlocation;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
@@ -15,7 +13,7 @@ import android.os.IBinder;
  * 前台定位service
  */
 
-public class LocationForegoundService extends Service {
+public class LocationForcegroundService extends Service {
 
     @Override
     public void onCreate() {
@@ -43,26 +41,17 @@ public class LocationForegoundService extends Service {
     }
 
     //显示通知栏
+    @SuppressLint("NewApi")
     public void showNotify(){
-        Notification.Builder builder = new Notification.Builder(getApplicationContext());
-        Intent nfIntent = new Intent(this, MainActivity.class);
-        builder.setContentIntent(PendingIntent.getActivity(this, 0, nfIntent, 0))
-                .setLargeIcon(BitmapFactory.decodeResource(this.getResources(),R.mipmap.ic_launcher))
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("正在后台定位")
-                .setContentText("定位进行中")
-                .setWhen(System.currentTimeMillis());
-        Notification notification = builder.build();
-        notification.defaults = Notification.DEFAULT_SOUND;
         //调用这个方法把服务设置成前台服务
-        startForeground(110, notification);
+        startForeground(Utils.NOTIFY_ID, Utils.buildNotification(getApplicationContext()));
     }
 
     private final IBinder mBinder = new LocalBinder();
 
     public class LocalBinder extends Binder {
-        LocationForegoundService getService() {
-            return LocationForegoundService.this;
+        LocationForcegroundService getService() {
+            return LocationForcegroundService.this;
         }
     }
 }

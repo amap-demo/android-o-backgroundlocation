@@ -61,9 +61,12 @@
             </intent-filter>
         </activity>
         <!--定位服务-->
-        <service android:name="com.amap.api.location.APSService"/>
+        <service android:name="com.amap.api.location.APSService"
+            android:foregroundServiceType="location"/>
         <!-- 启动一个前台服务-->
-        <service android:name="com.amap.androidobackgroundlocation.LocationForegoundService"/>
+        <service
+            android:name="com.amap.androidobackgroundlocation.LocationForcegroundService"
+            android:foregroundServiceType="location"/>
     </application>
 
 </manifest>
